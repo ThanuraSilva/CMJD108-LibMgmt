@@ -29,6 +29,22 @@ public class BookController {
           System.out.println(bookDTO);
           return ResponseEntity.noContent().build();
      }
+     @GetMapping("{bookId}")
+     public ResponseEntity<BookDTO> getSelectedBook(@PathVariable String bookId){
+          System.out.println("Get selected book for "+bookId);
+          return ResponseEntity.ok(new BookDTO("B005",
+                  "Spring boot -2025",
+                  "Kamal Perera",
+                  "2024",
+                  "Oxford publisher",
+                  "14466-56136",
+                  500.0,
+                  50,
+                  10,
+                  "2024-01-11",
+                  "10.25"
+                  ));
+     }
 
 
 }
