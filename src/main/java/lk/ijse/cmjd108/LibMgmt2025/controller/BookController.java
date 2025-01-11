@@ -23,6 +23,12 @@ public class BookController {
           System.out.println(bookIdValue);
           return ResponseEntity.noContent().build();
      }
+     @PatchMapping(value = "/{bookId}",consumes = MediaType.APPLICATION_JSON_VALUE)
+     public ResponseEntity<Void> updateBook(@PathVariable String bookId, @RequestBody BookDTO bookDTO){
+          System.out.println(bookId);
+          System.out.println(bookDTO);
+          return ResponseEntity.noContent().build();
+     }
 
 
 }
