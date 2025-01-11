@@ -2,7 +2,6 @@ package lk.ijse.cmjd108.LibMgmt2025.service.impl;
 
 import lk.ijse.cmjd108.LibMgmt2025.dto.BookDTO;
 import lk.ijse.cmjd108.LibMgmt2025.service.BookService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
 public class BookServiceIMPL implements BookService {
     @Override
     public void addBook(BookDTO bookDTO) {
-
+        System.out.println("Add Book from service layer "+bookDTO);
     }
 
     @Override

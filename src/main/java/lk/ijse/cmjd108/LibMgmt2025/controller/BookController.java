@@ -1,6 +1,9 @@
 package lk.ijse.cmjd108.LibMgmt2025.controller;
 
 import lk.ijse.cmjd108.LibMgmt2025.dto.BookDTO;
+import lk.ijse.cmjd108.LibMgmt2025.service.BookService;
+import lk.ijse.cmjd108.LibMgmt2025.service.impl.BookServiceIMPL;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +15,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/books")
 public class BookController {
+
+     @Autowired
+     private BookService bookService;
+
      @GetMapping("health")
      public String healthTest(){
          return "Book Controller is running";
      }
      @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
      public ResponseEntity<Void> addBook(@RequestBody BookDTO bookDTO){
+          bookService.addBook(bookDTO);
           System.out.println(bookDTO);
           return new ResponseEntity<>(HttpStatus.CREATED);
      }
