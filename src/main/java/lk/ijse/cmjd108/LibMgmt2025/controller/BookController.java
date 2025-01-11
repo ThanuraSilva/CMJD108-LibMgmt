@@ -49,7 +49,7 @@ public class BookController {
                   ));
      }
      @GetMapping
-     public ResponseEntity<List<BookDTO>> getAllBooks(){
+     public ResponseEntity<List<BookDTO>> getAllBooks() {
           List<BookDTO> bookList = new ArrayList<>();
           bookList.add(new BookDTO(
                   "B005",
@@ -122,7 +122,4 @@ public class BookController {
           ));
           return ResponseEntity.ok(bookList);
      }
-
-
-
 }
