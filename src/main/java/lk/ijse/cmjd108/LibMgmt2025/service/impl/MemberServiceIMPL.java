@@ -13,6 +13,7 @@ public class MemberServiceIMPL implements MemberService {
     @Override
     public void saveMember(MemberDTO member) {
       member.setMemberId(UtilData.generateMemberId());
+      member.setMembershipDate(String.valueOf(UtilData.generateTodayDate()));
         System.out.println(member);
     }
 
