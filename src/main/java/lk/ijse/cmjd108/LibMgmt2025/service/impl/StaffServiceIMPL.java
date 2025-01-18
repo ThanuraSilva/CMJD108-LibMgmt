@@ -13,7 +13,8 @@ public class StaffServiceIMPL implements StaffService {
     @Override
     public void saveStaff(StaffDTO staffDTO) {
        staffDTO.setStaffId(UtilData.generateStaffId());
-        System.out.println(staffDTO);
+       staffDTO.setLastUpdate(String.valueOf(UtilData.generateTodayDate()));
+       System.out.println(staffDTO);
     }
 
     @Override
