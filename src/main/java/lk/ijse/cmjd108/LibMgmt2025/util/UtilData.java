@@ -28,5 +28,9 @@ public class UtilData {
     public static Time generateCurrentTime(){
         return Time.valueOf(LocalTime.now());
     }
+    //Generate return date of a lending
+    public static LocalDate generateBookReturnDate(){
+        return LocalDate.now().plusDays(7);
+    }
 
 }
