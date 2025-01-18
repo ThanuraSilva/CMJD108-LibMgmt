@@ -3,12 +3,17 @@ package lk.ijse.cmjd108.LibMgmt2025.service.impl;
 import lk.ijse.cmjd108.LibMgmt2025.dto.LendingDTO;
 import lk.ijse.cmjd108.LibMgmt2025.service.LendingService;
 import lk.ijse.cmjd108.LibMgmt2025.util.UtilData;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 @Service
 public class LendingServiceIMPL implements LendingService {
+    @Value("${perDayFine}") // Value injection
+    private Double perDayAmount;
     @Override
     public void addLendingData(LendingDTO lendingDTO) {
         lendingDTO.setLendingId(UtilData.generateLendingId());
@@ -21,7 +26,11 @@ public class LendingServiceIMPL implements LendingService {
     }
 
     @Override
-    public void handOverBook(String lendingId, LendingDTO lendingDTO) {
+    public void handOverBook(String lendingId) {
+        //Todo 1: Check the details of the lending record - DB
+        //Todo: Check overdue and fine
+
+
 
     }
 
@@ -104,5 +113,17 @@ public class LendingServiceIMPL implements LendingService {
         lendingList.add(lending4);
         lendingList.add(lending5);
         return lendingList;
+    }
+    private Long calcOverDue(){
+        //Today
+        LocalDate today = UtilData.generateTodayDate();
+        LocalDate returnDate = UtilData.generateBookReturnDateCalc();
+        if(returnDate.isBefore(today)){
+           return ChronoUnit.DAYS.between(today, returnDate);
+        }
+        return 0L;
+    }
+    private Double calcFine(Long datCount){
+        return datCount * perDayAmount;
     }
 }
