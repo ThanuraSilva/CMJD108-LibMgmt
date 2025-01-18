@@ -2,6 +2,7 @@ package lk.ijse.cmjd108.LibMgmt2025.service.impl;
 
 import lk.ijse.cmjd108.LibMgmt2025.dto.MemberDTO;
 import lk.ijse.cmjd108.LibMgmt2025.service.MemberService;
+import lk.ijse.cmjd108.LibMgmt2025.util.UtilData;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,7 +12,8 @@ import java.util.List;
 public class MemberServiceIMPL implements MemberService {
     @Override
     public void saveMember(MemberDTO member) {
-
+      member.setMemberId(UtilData.generateMemberId());
+        System.out.println(member);
     }
 
     @Override
