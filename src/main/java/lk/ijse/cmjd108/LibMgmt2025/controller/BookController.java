@@ -16,8 +16,12 @@ import java.util.List;
 @RequestMapping("/api/v1/books")
 public class BookController {
 
+     private final BookService bookService;
+
      @Autowired
-     private BookService bookService;
+     public BookController(BookService bookService) {
+          this.bookService = bookService;
+     }
 
      @GetMapping("health")
      public String healthTest(){
