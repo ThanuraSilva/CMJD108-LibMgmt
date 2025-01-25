@@ -16,9 +16,11 @@ public class MemberController {
 
     private final MemberService memberService;
 
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addStaffMember(@RequestBody MemberDTO memberDTO){
+        if(memberDTO == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         memberService.saveMember(memberDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
