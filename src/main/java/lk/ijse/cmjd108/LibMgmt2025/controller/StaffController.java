@@ -2,6 +2,7 @@ package lk.ijse.cmjd108.LibMgmt2025.controller;
 
 import lk.ijse.cmjd108.LibMgmt2025.dto.BookDTO;
 import lk.ijse.cmjd108.LibMgmt2025.dto.StaffDTO;
+import lk.ijse.cmjd108.LibMgmt2025.exception.StaffMemberNotFoundException;
 import lk.ijse.cmjd108.LibMgmt2025.service.StaffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,20 @@ public class StaffController {
     }
     @DeleteMapping
     public ResponseEntity<Void> deleteStaffMember(@RequestParam ("staffId") String staffId){
-        staffService.deleteStaff(staffId);
-        return ResponseEntity.noContent().build();
+        if(staffId == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            staffService.deleteStaff(staffId);
+            return ResponseEntity.noContent().build();
+        }catch (StaffMemberNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
     @PatchMapping(value = "/{staffId}",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateStaffMember(@PathVariable String staffId, @RequestBody StaffDTO staffMemberDetails){
