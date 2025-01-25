@@ -31,7 +31,13 @@ public class MemberServiceIMPL implements MemberService {
 
     @Override
     public void updateMember(String memberId, MemberDTO member) {
-
+        var selectedMember = memberDao.findById(memberId);
+        if(!selectedMember.isPresent()){
+            throw new MemberNotFoundException("Member Not Found");
+        }
+        selectedMember.get().setEmail(member.getEmail());
+        selectedMember.get().setName(member.getName());
+        selectedMember.get().setMembershipDate(UtilData.generateTodayDate());
     }
 
     @Override

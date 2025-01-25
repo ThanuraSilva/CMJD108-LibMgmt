@@ -40,10 +40,21 @@ public class MemberController {
         }
 
     }
-    @PatchMapping(value = "/{memberId}",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> updateStaffMember(@PathVariable String memberId, @RequestBody MemberDTO memberDetails){
-        memberService.updateMember(memberId,memberDetails);
-        return ResponseEntity.noContent().build();
+    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> updateStaffMember(@RequestParam String memberId, @RequestBody MemberDTO memberDetails){
+        if(memberId == null || memberDetails == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            memberService.updateMember(memberId,memberDetails);
+            return ResponseEntity.noContent().build();
+        }catch (MemberNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @GetMapping("{memberId}")
     public ResponseEntity<MemberDTO> getSelectedMember(@PathVariable String memberId){
