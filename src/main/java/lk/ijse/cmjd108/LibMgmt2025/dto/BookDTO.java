@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.sql.Time;
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -18,6 +21,6 @@ public class BookDTO implements Serializable {
     private Double price;
     private Integer totalQty;
     private Integer avilableQty;
-    private String lastUpdateDate;
-    private String lastUpdateTime;
+    private LocalDate lastUpdateDate;
+    private Time lastUpdateTime;
 }
