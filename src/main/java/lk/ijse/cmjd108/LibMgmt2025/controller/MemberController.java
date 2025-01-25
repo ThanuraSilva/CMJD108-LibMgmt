@@ -1,5 +1,6 @@
 package lk.ijse.cmjd108.LibMgmt2025.controller;
 import lk.ijse.cmjd108.LibMgmt2025.dto.MemberDTO;
+import lk.ijse.cmjd108.LibMgmt2025.exception.MemberNotFoundException;
 import lk.ijse.cmjd108.LibMgmt2025.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,18 @@ public class MemberController {
     }
     @DeleteMapping
     public ResponseEntity<Void> deleteStaffMember(@RequestParam ("memberId") String memberId){
-        memberService.deleteMember(memberId);
-        return ResponseEntity.noContent().build();
+        if(memberId == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            memberService.deleteMember(memberId);
+            return ResponseEntity.noContent().build();
+        }catch (MemberNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
     @PatchMapping(value = "/{memberId}",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateStaffMember(@PathVariable String memberId, @RequestBody MemberDTO memberDetails){
