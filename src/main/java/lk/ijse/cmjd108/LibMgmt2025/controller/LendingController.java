@@ -15,10 +15,6 @@ import java.util.List;
 public class LendingController {
     private final LendingService lendingService;
 
-    @GetMapping("health")
-    public String healthTest(){
-        return "Lending Controller is running";
-    }
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addLending(@RequestBody LendingDTO lendingDTO){
         lendingService.addLendingData(lendingDTO);

@@ -16,10 +16,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("health")
-    public String healthTest(){
-        return "Member Controller is running";
-    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addStaffMember(@RequestBody MemberDTO memberDTO){
         memberService.saveMember(memberDTO);

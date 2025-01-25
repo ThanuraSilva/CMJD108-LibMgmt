@@ -18,10 +18,6 @@ import java.util.List;
 public class StaffController {
     private final StaffService staffService;
 
-    @GetMapping("health")
-    public String healthTest(){
-        return "Staff Controller is running";
-    }
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addStaffMember(@RequestBody StaffDTO staffDTO){
         staffService.saveStaff(staffDTO);
