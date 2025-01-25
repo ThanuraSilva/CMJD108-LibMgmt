@@ -3,6 +3,7 @@ package lk.ijse.cmjd108.LibMgmt2025.service.impl;
 import lk.ijse.cmjd108.LibMgmt2025.dao.StaffDao;
 import lk.ijse.cmjd108.LibMgmt2025.dto.Role;
 import lk.ijse.cmjd108.LibMgmt2025.dto.StaffDTO;
+import lk.ijse.cmjd108.LibMgmt2025.entities.StaffEntity;
 import lk.ijse.cmjd108.LibMgmt2025.exception.StaffMemberNotFoundException;
 import lk.ijse.cmjd108.LibMgmt2025.service.StaffService;
 import lk.ijse.cmjd108.LibMgmt2025.util.EntityDTOConvert;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,7 +31,17 @@ public class StaffServiceIMPL implements StaffService {
 
     @Override
     public void updateStaff(String staffId,StaffDTO staffDTO) {
-
+        var foundStaffMember = staffDao.findById(staffId);
+        if(!foundStaffMember.isPresent()){
+            throw new StaffMemberNotFoundException("Staff member not found");
+        }
+        foundStaffMember.get().setFirstName(staffDTO.getFirstName());
+        foundStaffMember.get().setLastName(staffDTO.getLastName());
+        foundStaffMember.get().setEmail(staffDTO.getEmail());
+        foundStaffMember.get().setJoinDate(staffDTO.getJoinDate());
+        foundStaffMember.get().setLastUpdate(UtilData.generateTodayDate());
+        foundStaffMember.get().setPhone(staffDTO.getPhone());
+        foundStaffMember.get().setRole(staffDTO.getRole());
     }
 
     @Override
