@@ -56,15 +56,11 @@ public class StaffServiceIMPL implements StaffService {
 
     @Override
     public StaffDTO getSelectedStaffMember(String staffId) {
-        StaffDTO staff = new StaffDTO();
-        staff.setStaffId("S001");
-        staff.setFirstName("John");
-        staff.setLastName("Doe");
-        staff.setEmail("john.doe@example.com");
-        staff.setJoinDate("2025-01-18");
-        staff.setPhone("123-456-7890");
-        staff.setRole(Role.ADMIN);
-        return staff;
+        if(!staffDao.findById(staffId).isPresent()){
+            throw new StaffMemberNotFoundException("Staff member not fond");
+        }
+        return entityDTOConvert.
+                convertStaffEntityToStaffDTO(staffDao.getReferenceById(staffId));
     }
 
     @Override
