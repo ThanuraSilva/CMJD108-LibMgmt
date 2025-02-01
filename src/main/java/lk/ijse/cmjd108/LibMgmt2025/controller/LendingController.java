@@ -30,7 +30,7 @@ public class LendingController {
         }catch (BookNotFoundException |MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (DataPersistException | EnoughBooksNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
