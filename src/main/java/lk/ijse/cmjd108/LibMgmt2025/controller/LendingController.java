@@ -1,10 +1,7 @@
 package lk.ijse.cmjd108.LibMgmt2025.controller;
 
 import lk.ijse.cmjd108.LibMgmt2025.dto.LendingDTO;
-import lk.ijse.cmjd108.LibMgmt2025.exception.BookNotFoundException;
-import lk.ijse.cmjd108.LibMgmt2025.exception.DataPersistException;
-import lk.ijse.cmjd108.LibMgmt2025.exception.EnoughBooksNotFoundException;
-import lk.ijse.cmjd108.LibMgmt2025.exception.MemberNotFoundException;
+import lk.ijse.cmjd108.LibMgmt2025.exception.*;
 import lk.ijse.cmjd108.LibMgmt2025.service.LendingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,10 +25,13 @@ public class LendingController {
             lendingService.addLendingData(lendingDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (BookNotFoundException |MemberNotFoundException e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (DataPersistException | EnoughBooksNotFoundException e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }catch (Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -41,10 +41,16 @@ public class LendingController {
         lendingService.deleteLendingData(lendingId);
         return ResponseEntity.noContent().build();
     }
-    @PatchMapping(value = "/{lendingId}",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> handOverBook(@PathVariable String lendingId){
-        lendingService.handOverBook(lendingId);
-        return ResponseEntity.noContent().build();
+    @PatchMapping
+    public ResponseEntity<Void> handOverBook(@RequestParam ("lendingId") String lendingId){
+        try {
+            lendingService.handOverBook(lendingId);
+            return ResponseEntity.noContent().build();
+        }catch (LendingDataNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        }
     }
     @GetMapping("{lendingId}")
     public ResponseEntity<LendingDTO> getSelectedLending(@PathVariable String lendingId){

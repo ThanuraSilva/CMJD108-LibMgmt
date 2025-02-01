@@ -5,13 +5,10 @@ import lk.ijse.cmjd108.LibMgmt2025.dao.LendingDao;
 import lk.ijse.cmjd108.LibMgmt2025.dao.MemberDao;
 import lk.ijse.cmjd108.LibMgmt2025.dto.LendingDTO;
 import lk.ijse.cmjd108.LibMgmt2025.entities.BookEntity;
+import lk.ijse.cmjd108.LibMgmt2025.entities.LendingEntity;
 import lk.ijse.cmjd108.LibMgmt2025.entities.MemberEntity;
-import lk.ijse.cmjd108.LibMgmt2025.exception.BookNotFoundException;
-import lk.ijse.cmjd108.LibMgmt2025.exception.DataPersistException;
-import lk.ijse.cmjd108.LibMgmt2025.exception.EnoughBooksNotFoundException;
-import lk.ijse.cmjd108.LibMgmt2025.exception.MemberNotFoundException;
+import lk.ijse.cmjd108.LibMgmt2025.exception.*;
 import lk.ijse.cmjd108.LibMgmt2025.service.LendingService;
-import lk.ijse.cmjd108.LibMgmt2025.service.MemberService;
 import lk.ijse.cmjd108.LibMgmt2025.util.EntityDTOConvert;
 import lk.ijse.cmjd108.LibMgmt2025.util.LendingMapping;
 import lk.ijse.cmjd108.LibMgmt2025.util.UtilData;
@@ -22,14 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class LendingServiceIMPL implements LendingService {
     @Value("${perDayFine}") // Value injection
-    private Double perDayAmount;
+    private Double perDayFineAmount;
     private final LendingMapping lendingMapping;
     private final BookDao bookDao;
     private final MemberDao memberDao;
@@ -68,10 +64,17 @@ public class LendingServiceIMPL implements LendingService {
     @Override
     public void handOverBook(String lendingId) {
         //Todo 1: Check the details of the lending record - DB
+        LendingEntity foundLending = lendingDao.findById(lendingId).orElseThrow(() -> new LendingDataNotFoundException("Lending data not found"));
         //Todo: Check overdue and fine
+        var returnDate = foundLending.getReturnDate();
+        var overDue = calcOverDue(returnDate); // overdue date count
+        var fineAmount = calcFine(overDue); // calc fine against overdue dates
 
-
-
+        foundLending.setOverdueDays(overDue);
+        foundLending.setFineAmount(fineAmount);
+        foundLending.setIsActiveLending(false);
+        //update the book qty against the bookId
+        bookDao.addBookBasedBookHandover(foundLending.getBook().getBookId());
     }
 
     @Override
@@ -89,11 +92,14 @@ public class LendingServiceIMPL implements LendingService {
        return null;
 
     }
-    private Long calcOverDue(){
-      return null;
-
+    private Long calcOverDue(LocalDate returnDate){
+        var today = UtilData.generateTodayDate();
+        if(returnDate.isBefore(today)){
+            return ChronoUnit.DAYS.between(today,returnDate);
+        }
+        return 0L;
     }
-    private Double calcFine(Long datCount){
-        return datCount * perDayAmount;
+    private Double calcFine(Long daysCount){
+        return daysCount * perDayFineAmount;
     }
 }
