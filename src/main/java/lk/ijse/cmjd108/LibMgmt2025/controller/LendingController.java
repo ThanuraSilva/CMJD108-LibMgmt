@@ -38,8 +38,19 @@ public class LendingController {
     }
     @DeleteMapping
     public ResponseEntity<Void> deleteLending(@RequestParam ("lendingId") String lendingId){
-        lendingService.deleteLendingData(lendingId);
-        return ResponseEntity.noContent().build();
+        if(lendingId == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            lendingService.deleteLendingData(lendingId);
+            return ResponseEntity.noContent().build();
+        }catch (LendingDataNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @PatchMapping
     public ResponseEntity<Void> handOverBook(@RequestParam ("lendingId") String lendingId){

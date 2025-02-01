@@ -44,7 +44,7 @@ public class LendingServiceIMPL implements LendingService {
         if(bookDao.avlilQty(bookId) > 0){
             // Books are available
             if(bookDao.deductBasedOnLending(bookId) > 0){
-                //proceed the lending
+                //process the lending
                  lendingDTO.setLendingId(UtilData.generateLendingId());
                  lendingDTO.setLendingDate(UtilData.generateTodayDate());
                  lendingDTO.setReturnDate(UtilData.generateBookReturnDate());
@@ -63,9 +63,7 @@ public class LendingServiceIMPL implements LendingService {
 
     @Override
     public void handOverBook(String lendingId) {
-        //Todo 1: Check the details of the lending record - DB
         LendingEntity foundLending = lendingDao.findById(lendingId).orElseThrow(() -> new LendingDataNotFoundException("Lending data not found"));
-        //Todo: Check overdue and fine
         var returnDate = foundLending.getReturnDate();
         var overDue = calcOverDue(returnDate); // overdue date count
         var fineAmount = calcFine(overDue); // calc fine against overdue dates
@@ -79,7 +77,14 @@ public class LendingServiceIMPL implements LendingService {
 
     @Override
     public void deleteLendingData(String lendingId) {
-
+         //validation the ID
+        var foundLending = lendingDao.findById(lendingId).orElseThrow(() ->
+                new LendingDataNotFoundException("Lending data not found"));
+        lendingDao.deleteById(lendingId);
+        //add the book when delete the lending record
+        if(foundLending.getIsActiveLending() == true){
+            bookDao.addBookBasedBookHandover(foundLending.getBook().getBookId());
+        }
     }
 
     @Override
