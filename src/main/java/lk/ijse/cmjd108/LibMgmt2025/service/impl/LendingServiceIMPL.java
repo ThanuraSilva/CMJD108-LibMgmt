@@ -96,8 +96,7 @@ public class LendingServiceIMPL implements LendingService {
 
     @Override
     public List<LendingDTO> getAllLendingData() {
-       return null;
-
+      return lendingMapping.getLendingDTOList(lendingDao.findAll());
     }
     private Long calcOverDue(LocalDate returnDate){
         var today = UtilData.generateTodayDate();

@@ -1,9 +1,11 @@
 package lk.ijse.cmjd108.LibMgmt2025.util;
 
 import lk.ijse.cmjd108.LibMgmt2025.dto.BookDTO;
+import lk.ijse.cmjd108.LibMgmt2025.dto.LendingDTO;
 import lk.ijse.cmjd108.LibMgmt2025.dto.MemberDTO;
 import lk.ijse.cmjd108.LibMgmt2025.dto.StaffDTO;
 import lk.ijse.cmjd108.LibMgmt2025.entities.BookEntity;
+import lk.ijse.cmjd108.LibMgmt2025.entities.LendingEntity;
 import lk.ijse.cmjd108.LibMgmt2025.entities.MemberEntity;
 import lk.ijse.cmjd108.LibMgmt2025.entities.StaffEntity;
 import lombok.RequiredArgsConstructor;
@@ -47,9 +49,4 @@ public class EntityDTOConvert {
     public List<StaffDTO> toStaffDTOList(List<StaffEntity> staffEntityList) {
         return modelMapper.map(staffEntityList,new TypeToken<List<StaffDTO>>(){}.getType());
     }
-
-
-
-
-
 }

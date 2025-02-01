@@ -32,8 +32,4 @@ public class UtilData {
     public static LocalDate generateBookReturnDate(){
         return LocalDate.now().plusDays(7);
     }
-//    public static LocalDate generateBookReturnDateCalc(){
-//        return LocalDate.now().plusDays(7);
-//    }
-
 }
