@@ -18,6 +18,7 @@ import lk.ijse.cmjd108.LibMgmt2025.util.UtilData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LendingServiceIMPL implements LendingService {
     @Value("${perDayFine}") // Value injection
     private Double perDayAmount;
@@ -47,24 +49,20 @@ public class LendingServiceIMPL implements LendingService {
             // Books are available
             if(bookDao.deductBasedOnLending(bookId) > 0){
                 //proceed the lending
+                 lendingDTO.setLendingId(UtilData.generateLendingId());
+                 lendingDTO.setLendingDate(UtilData.generateTodayDate());
+                 lendingDTO.setReturnDate(UtilData.generateBookReturnDate());
+                 lendingDTO.setIsActiveLending(true);
+                 lendingDTO.setOverdueDays(0L);
+                 lendingDTO.setFineAmount(0.0);
+                 lendingDao.save(LendingMapping.toLendingEntity(lendingDTO, bookEntity, memberEntity));
+
             }else {
               throw new DataPersistException("Cannot update book data with 0 available Qty");
             }
         }else {
             throw new EnoughBooksNotFoundException("Not enough books to proceed");
         }
-
-
-
-
-
-        lendingDTO.setLendingId(UtilData.generateLendingId());
-        lendingDTO.setLendingDate(UtilData.generateTodayDate());
-        lendingDTO.setReturnDate(UtilData.generateBookReturnDate());
-        lendingDTO.setIsActiveLending(true);
-        lendingDTO.setFineAmount(0.00);
-        lendingDTO.setOverdueDays(0L);
-        System.out.println(lendingDTO);
     }
 
     @Override
@@ -92,13 +90,8 @@ public class LendingServiceIMPL implements LendingService {
 
     }
     private Long calcOverDue(){
-        //Today
-        LocalDate today = UtilData.generateTodayDate();
-        LocalDate returnDate = UtilData.generateBookReturnDateCalc();
-        if(returnDate.isBefore(today)){
-           return ChronoUnit.DAYS.between(today, returnDate);
-        }
-        return 0L;
+      return null;
+
     }
     private Double calcFine(Long datCount){
         return datCount * perDayAmount;

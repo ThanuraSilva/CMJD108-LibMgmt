@@ -1,6 +1,10 @@
 package lk.ijse.cmjd108.LibMgmt2025.controller;
 
 import lk.ijse.cmjd108.LibMgmt2025.dto.LendingDTO;
+import lk.ijse.cmjd108.LibMgmt2025.exception.BookNotFoundException;
+import lk.ijse.cmjd108.LibMgmt2025.exception.DataPersistException;
+import lk.ijse.cmjd108.LibMgmt2025.exception.EnoughBooksNotFoundException;
+import lk.ijse.cmjd108.LibMgmt2025.exception.MemberNotFoundException;
 import lk.ijse.cmjd108.LibMgmt2025.service.LendingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +21,20 @@ public class LendingController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addLending(@RequestBody LendingDTO lendingDTO){
-        if(lendingDTO ==null){
+        if(lendingDTO == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        lendingService.addLendingData(lendingDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        try {
+            lendingService.addLendingData(lendingDTO);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (BookNotFoundException |MemberNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (DataPersistException | EnoughBooksNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
     @DeleteMapping
     public ResponseEntity<Void> deleteLending(@RequestParam ("lendingId") String lendingId){
