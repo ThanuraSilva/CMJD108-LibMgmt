@@ -36,12 +36,12 @@ public class BookController {
           return new ResponseEntity<>(HttpStatus.CREATED);
      }
      @DeleteMapping
-     public ResponseEntity<Void> deleteBook(@RequestParam ("bookIdKey") String bookIdValue){
-          if(bookIdValue == null){
+     public ResponseEntity<Void> deleteBook(@RequestParam ("bookId") String bookId){
+          if(bookId == null){
                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
           }
           try {
-               bookService.deleteBook(bookIdValue);
+               bookService.deleteBook(bookId);
                return ResponseEntity.noContent().build();
           }catch (BookNotFoundException e){
                e.printStackTrace();
