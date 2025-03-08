@@ -26,7 +26,7 @@ public class BookController {
      private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
      private final BookService bookService;
-
+     @PreAuthorize("hasRole('ADMIN')")
      @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
      public ResponseEntity<Void> addBook(@RequestBody BookDTO bookDTO){
           logger.info("Call the addBook() with param {}",bookDTO);
@@ -37,6 +37,7 @@ public class BookController {
           return new ResponseEntity<>(HttpStatus.CREATED);
      }
      @DeleteMapping
+     @PreAuthorize("hasRole('ADMIN')")
      public ResponseEntity<Void> deleteBook(@RequestParam ("bookId") String bookId){
           if(bookId == null){
                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -87,7 +88,6 @@ public class BookController {
           }
      }
      @GetMapping("getallbooks")
-     @PreAuthorize("hasRole('ADMIN')")
      public ResponseEntity<List<BookDTO>> getAllBooks() {
           return ResponseEntity.ok(bookService.getAllBooks());
      }
